@@ -23,7 +23,7 @@ dotnet ef database update
 *\*leidžiama iš projekto root direktorijos*  
 *\*Čia pavyzdys. Kuriant naują migraciją reikia pakeisti pavadinimą*
 ```
-dotnet ef migrations add UpdateUserTable -p ./backend/MySavings.Data/ -s ./backend/MySavings.API/
+dotnet ef migrations add UpdateUserTable -p ./App.Data/ -s ./App.API/
 ```
 
 ### Swagger nuoroda
