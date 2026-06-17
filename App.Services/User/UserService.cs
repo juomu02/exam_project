@@ -20,12 +20,12 @@ namespace App.Services
         {
             if (await userRepository.GetByUserNameAsync(userName) != null)
             {
-                throw new ArgumentException("Vartotojo vardas jau naudojamas.");
+                throw new ArgumentException("User name is already in use.");
             }
 
             if (await userRepository.GetByEmailAsync(email) != null)
             {
-                throw new ArgumentException("El. paštas jau naudojamas.");
+                throw new ArgumentException("Email is already in use.");
             }
 
             var user = new User
@@ -51,12 +51,12 @@ namespace App.Services
             var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
             {
-                throw new ArgumentException("Vartotojas nerastas.");
+                throw new ArgumentException("User not found.");
             }
             if (!passwordHasher.VerifyHashedPassword(user, user.PasswordHash,
                 currentPassword).Equals(PasswordVerificationResult.Success))
             {
-                throw new ArgumentException("Įvedėte neteisingą slaptažodį.");
+                throw new ArgumentException("You have entered an incorrect password.");
             }
 
             user.PasswordHash = passwordHasher.HashPassword(user, newPassword);
@@ -68,7 +68,7 @@ namespace App.Services
             var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
             {
-                throw new ArgumentException("Vartotojas nerastas.");
+                throw new ArgumentException("User not found.");
             }
             if (user == null)
             {
@@ -77,7 +77,7 @@ namespace App.Services
 
             if (await userRepository.GetByEmailAsync(email) != null)
             {
-                throw new ArgumentException("El. paštas jau naudojamas.");
+                throw new ArgumentException("Email is already in use.");
             }
 
             user.Email = email;

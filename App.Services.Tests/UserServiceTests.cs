@@ -59,7 +59,7 @@ namespace App.Services.Tests
                 await userService.AddAsync(userName, email, password)
             );
 
-            Assert.Equal("Vartotojo vardas jau naudojamas.", exception.Message);
+            Assert.Equal("User name is already in use.", exception.Message);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace App.Services.Tests
             var exception = await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await userService.AddAsync(userName, email, password)
             );
-            Assert.Equal("El. paštas jau naudojamas.", exception.Message);
+            Assert.Equal("Email is already in use.", exception.Message);
         }
 
         [Fact]
