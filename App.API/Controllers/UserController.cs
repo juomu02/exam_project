@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace App.API.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
@@ -19,16 +20,9 @@ namespace App.API.Controllers
         public async Task<IActionResult> CreateAsync([FromBody]
             CreateUserRequest createUser)
         {
-            try
-            {
-                var userId = await userService.AddAsync(createUser.UserName,
-                    createUser.Email, createUser.Password);
-                return Created("/", userId);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var userId = await userService.AddAsync(createUser.UserName,
+                createUser.Email, createUser.Password);
+            return Created("/", userId);
         }
 
         // Endpointas skirtas testavimui
@@ -45,29 +39,31 @@ namespace App.API.Controllers
         }
 
 
-        [Authorize(Policy = "adminOnly")]
+        [Authorize(Policy = "userOnly")]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePasswordAsync([FromBody]
             ChangePasswordRequest changePassword)
         {
-            var result = await userService.ChangePasswordAsync(changePassword.UserId,
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value);
+            var result = await userService.ChangePasswordAsync(userId,
                 changePassword.CurrentPassword, changePassword.NewPassword);
             return Ok(result);
         }
 
 
-        [Authorize(Policy = "adminOnly")]
+        [Authorize(Policy = "userOnly")]
         [HttpPost("change-email")]
         public async Task<IActionResult> ChangeEmailAsync([FromBody]
             ChangeEmailRequest changeEmail)
         {
-            var result = await userService.ChangeEmailAsync(changeEmail.UserId,
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value);
+            var result = await userService.ChangeEmailAsync(userId,
                 changeEmail.Email);
             return Ok(result);
         }
 
 
-        [Authorize(Policy = "adminOnly")]
+        [Authorize(Policy = "userOnly")]
         [HttpDelete("delete-user/{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {

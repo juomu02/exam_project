@@ -5,12 +5,21 @@ namespace App.API.Models.Requests
     public class CreateUserRequest
     {
         [Required(ErrorMessage = "Username is required.")]
-        public string UserName { get; set; }
+        [RegularExpression("^[a-zA-Z][a-zA-Z0-9._-]*$",
+            ErrorMessage = "Username must start with a letter and can only contain letters, numbers, dots, hyphens, or underscores.")]
+        [StringLength(30, MinimumLength = 3,
+            ErrorMessage = "Username must be between 3 and 30 characters long.")]
+        public string? UserName { get; set; }
 
-        [Required(ErrorMessage = "Email is required.")]
-        public string Email { get; set; }
-
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email format.")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+            ErrorMessage = "Email must be a valid format without spaces (e.g., name@example.com).")]
+        [MaxLength(100, ErrorMessage = "Email cannot exceed 100 characters.")]
+        public string? Email { get; set; }
+        
         [Required(ErrorMessage = "Password is required.")]
-        public string Password { get; set; }
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
+        public string? Password { get; set; }
     }
 }
